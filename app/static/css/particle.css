@@ -1,7 +1,7 @@
 body {
     margin: 0;
     padding: 0;
-    background-color: #23374d;
+    background-color: #e5e8eb;
     /* background_image: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img(20).jpg"); */
 }
 
@@ -11,5 +11,5 @@ background_size: cover;
 } */
 
 .navbar{
-background-color:#23374d;
+background-color:#e7ebf0;
 }
