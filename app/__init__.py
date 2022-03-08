@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_ogin import LoginManager
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_mail import Mail
