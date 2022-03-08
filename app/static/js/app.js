@@ -125,11 +125,11 @@ particlesJS('particles-js',
         "config_demo": {
             "hide_card": true,
             "background_color": "#b61924",
-            "background_image": "https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img(20).jpg",
-            "background_position": "50% 50%",
-            "background_repeat": "no-repeat",
-            "background_size": "cover"
-        }
+        //     "background_image": "https://mdbootstrap.com/img/Photos/Horizontal/Nature/full%20page/img(20).jpg",
+        //     "background_position": "50% 50%",
+        //     "background_repeat": "no-repeat",
+        //     "background_size": "cover"
+        // }
     }
 
 );
