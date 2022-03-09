@@ -1,104 +1,98 @@
-from flask import render_template, redirect, url_for
-from flask_login import login_required, current_user
-
+from flask import render_template,request,redirect,url_for,abort
+from ..models import User,Pitches,Comments
+from .. import db,photos
+import markdown2  
+from .forms import UpdateProfile,CommentForm,PitchForm
+# from app import auth
 from . import main
-from .forms import PostForm, CommentForm, UpdateProfile
-from ..models import Post, Comment, User, Upvote, Downvote
-
-
+from flask_login import login_required,current_user
+#views
 @main.route('/')
 def index():
-    posts = Post.query.all()
-    product = Post.query.filter_by(category='product').all()
-    idea = Post.query.filter_by(category='idea').all()
-    business = Post.query.filter_by(category='Business').all()
-    return render_template('index.html', business=business, product=product, idea=idea, posts=posts)
-
-
-@main.route('/posts')
+    '''
+    View root page function that returns the index page and its data
+    '''
+ 
+    title='Pitch site'
+    return render_template('index.html',title=title)
+    
+@main.route('/pitch/newpitch', methods=['POST', 'GET'])
 @login_required
-def posts():
-    posts = Post.query.all()
-    likes = Upvote.query.all()
-    user = current_user
-    return render_template('pitch_display.html', posts=posts, likes=likes, user=user)
-
-
-@main.route('/new_post', methods=['GET', 'POST'])
-@login_required
-def new_post():
-    form = PostForm()
+def new_pitch():
+    form = PitchForm()
     if form.validate_on_submit():
         title = form.title.data
-        post = form.post.data
         category = form.category.data
-        user_id = current_user._get_current_object().id
-        post_obj = Post(post=post, title=title, category=category, user_id=user_id)
-        post_obj.save()
-        return redirect(url_for('main.index'))
-    return render_template('pitch.html', form=form)
+        newPitch = form.pitch_info.data
+        new_pitch = Pitches(pitch_title=title,pitch_category=category,pitch_itself=newPitch,user=current_user)
+        new_pitch.save_pitch()
+        return redirect(url_for('.index'))
+    title = 'Add pitch'
+    return render_template('pitches.html', title=title, pitchesform=form)
 
+@main.route('/categories/<category>')
+def categories(category):
+    '''
+    view function to display interview pitches
+    '''
+    pitches=Pitches.get_pitches (category)
+    title = category + "pitches"
+ 
+    return render_template('categories.html',title=title,pitches=pitches)
 
-@main.route('/comment/<int:post_id>', methods=['GET', 'POST'])
+@main.route('/comments/<id>')
 @login_required
-def comment(post_id):
+def comment(id):
+    '''
+    function to return the comments
+    '''
+    comm =Comments.get_comment(id)
+    print(comm)
+    title = 'comments'
+    return render_template('comments.html',comment = comm,title = title)
+
+@main.route('/new_comment/<int:pitches_id>', methods = ['GET', 'POST'])
+@login_required
+def new_comment(pitches_id):
+    pitches = Pitches.query.filter_by(id = pitches_id).first()
     form = CommentForm()
-    post = Post.query.get(post_id)
-    user = User.query.all()
-    comments = Comment.query.filter_by(post_id=post_id).all()
+
     if form.validate_on_submit():
         comment = form.comment.data
-        post_id = post_id
-        user_id = current_user._get_current_object().id
-        new_comment = Comment(
-            comment=comment,
-            post_id=post_id,
-            user_id=user_id
-        )
-        new_comment.save()
-        new_comments = [new_comment]
-        print(new_comments)
-        return redirect(url_for('.comment', post_id=post_id))
-    return render_template('comment.html', form=form, post=post, comments=comments, user=user)
 
+        new_comment = Comments(comment=comment,user_id=current_user.id, pitches_id=pitches_id)
 
-@main.route('/user')
+        new_comment.save_comment()
+
+        return redirect(url_for('main.index'))
+    title='New Pitch'
+    return render_template('new_comment.html',title=title,comment_form = form,pitches_id=pitches_id)
+@main.route('/user/<uname>')
 @login_required
-def user():
-    username = current_user.username
-    user = User.query.filter_by(username=username).first()
+def profile(uname):
+    user = User.query.filter_by(username = uname).first()
     if user is None:
-        return ('not found')
-    return render_template('profile.html', user=user)
-
-
-@main.route('/user/<name>/update_profile', methods=['POST', 'GET'])
-@login_required
-def updateprofile(name):
+        abort(404)
+    return render_template("profile/profile.html", user = user)
+@main.route('/user/<uname>/update',methods = ['GET','POST'])
+def update_profile(uname):
+    user = User.query.filter_by(username = uname).first()
+    if user is None:
+        abort(404)
     form = UpdateProfile()
-    user = User.query.filter_by(username=name).first()
-    if user is None:
-        error = 'The user does not exist'
     if form.validate_on_submit():
         user.bio = form.bio.data
-        user.save()
-        return redirect(url_for('.profile', name=name))
-    return render_template('profile/update_profile.html', form=form)
-
-
-@main.route('/like/<int:id>', methods=['POST', 'GET'])
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('.profile',uname = user.username))
+    return render_template('profile/update.html',form = form)
+@main.route('/user/<uname>/update/pic',methods = ['POST'])
 @login_required
-def upvote(id):
-    post = Post.query.get(id)
-    vote_mpya = Upvote(post=post, upvote=1)
-    vote_mpya.save()
-    return redirect(url_for('main.posts'))
-
-
-@main.route('/dislike/<int:id>', methods=['GET', 'POST'])
-@login_required
-def downvote(id):
-    post = Post.query.get(id)
-    vm = Downvote(post=post, downvote=1)
-    vm.save()
-    return redirect(url_for('main.posts'))
+def update_pic(uname):
+    user = User.query.filter_by(username = uname).first()
+    if 'photo' in request.files:
+        filename = photos.save(request.files['photo'])
+        path = f'photos/{filename}'
+        user.profile_pic_path = path
+        db.session.commit()
+    return redirect(url_for('main.profile',uname = uname))
