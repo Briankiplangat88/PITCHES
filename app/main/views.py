@@ -23,8 +23,8 @@ def new_pitch():
     if form.validate_on_submit():
         title = form.title.data
         category = form.category.data
-        newPitch = form.pitch_info.data
-        new_pitch = Pitches(pitch_title=title,pitch_category=category,pitch_itself=newPitch,user=current_user)
+        # newPitch = form.pitch_info.data
+        new_pitch = Pitches(pitch_title=title,pitch_category=category,user=current_user)
         new_pitch.save_pitch()
         return redirect(url_for('.index'))
     title = 'Add pitch'
@@ -40,16 +40,17 @@ def categories(category):
  
     return render_template('categories.html',title=title,pitches=pitches)
 
+
 @main.route('/comments/<id>')
 @login_required
 def comment(id):
     '''
     function to return the comments
     '''
-    comm =Comments.get_comment(id)
-    print(comm)
+    comments =Comments.get_comments(id)
+   
     title = 'comments'
-    return render_template('comments.html',comment = comm,title = title)
+    return render_template('comments.html',comments = comments,title = title)
 
 @main.route('/new_comment/<int:pitches_id>', methods = ['GET', 'POST'])
 @login_required
@@ -60,7 +61,7 @@ def new_comment(pitches_id):
     if form.validate_on_submit():
         comment = form.comment.data
 
-        new_comment = Comments(comment=comment,user_id=current_user.id, pitches_id=pitches_id)
+        new_comment = Comments(pitch_comment=comment,user_id=current_user.id, pitches_id=pitches_id)
 
         new_comment.save_comment()
 

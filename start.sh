@@ -3,5 +3,5 @@ export MAIL_PASSWORD='124512bK'
 export SECRET_KEY='secret'
 export SQLALCHEMY_DATABASE_URI= 'postgresql+psycopg2://moringa:Access@localhost/pitch'
 
-  # SQLALCHEMY_DATABASE_URI='DATABASE_URL'
+# SQLALCHEMY_DATABASE_URI='DATABASE_URL'
   python3.9 manage.py server

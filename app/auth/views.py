@@ -5,7 +5,7 @@ from ..models import User
 from .. import db
 from flask import render_template,redirect,url_for, flash,request
 from .forms import LoginForm,RegistrationForm
-from ..email import mail_message
+# from  ..email import mail_message
 from flask_login import login_user,login_required,logout_user
 
 @auth.route('/login',methods=['GET','POST'])
@@ -31,7 +31,7 @@ def register():
         db.session.add(user)
         db.session.commit()
 
-        mail_message("Welcome to pitches","email/welcome_user",user.email,user=user)
+        # mail_message("Welcome to pitches","email/welcome_user",user.email,user=user)
 
         return redirect(url_for('auth.login'))
         title = "New user"

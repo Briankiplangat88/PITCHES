@@ -83,10 +83,12 @@ class Comments(db.Model):
         db.session.commit()
     @classmethod
     def get_comments(cls,id):
-        comments = comment = Comments.query.order_by(Comments.time_posted.desc()).filter_by(pitches_id=id).all()
+        comments = Comments.query.order_by(Comments.posted.desc()).filter_by(pitches_id=id).all()
         return comments
 class PhotoProfile(db.Model):
     __tablename__ = 'profile_photos'
     id = db.Column(db.Integer,primary_key = True)
     pic_path = db.Column(db.String())
     user_id = db.Column(db.Integer,db.ForeignKey("users.id"))
+
+
