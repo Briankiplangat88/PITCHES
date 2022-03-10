@@ -16,17 +16,17 @@ The users will submit their one minute pitches and other users will vote on them
 
 | Inputs |  Description |
 | :---         |          ---: |
-| Username  | Account username, ``eg lauradoe``|
-| Password  | Account password, ``eg laura23``|
+| Username  | Account username, ``eg moringa``|
+| Password  | Account password, ``eg 12345``|
 
 >Signup inputs
 
 | Inputs |  Description |
 | :---         |          ---: |
-| Username  | Account username, ``eg lauradoe``|
-| Email  | User email, ``eg morty@testmail.com``|
-| Password  | Account password, ``eg laura23``|
-| Confirm Password  | Account password, ``eg laura23``|
+| Username  | Account username, ``eg moringa``|
+| Email  | User email, ``eg moringa@testmail.com``|
+| Password  | Account password, ``eg moringa``|
+| Confirm Password  | Account password, ``eg moringa``|
 
 > Pitches inputs
 
