@@ -111,9 +111,3 @@ After extracting the files,
 
 ## Live link 
 **You can view the project through this link**
-
-
-
-## License 
-
-#### [*GNU License*](LICENSE)
