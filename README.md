@@ -107,7 +107,3 @@ After extracting the files,
  > ``python3 manage.py test.``
 
 
-
-
-## Live link 
-**You can view the project through this link**
