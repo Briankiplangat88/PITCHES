@@ -108,9 +108,6 @@ After extracting the files,
 
 
 
-## Contacts 
-**ccayreen24@gmail.com**
-
 
 ## Live link 
 **You can view the project through this link**
